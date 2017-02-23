@@ -50,7 +50,7 @@ app.post('/xbox/4720274/leagueteams', function(req, res) {
   // Rosters are in the body under rosterInfoList
   const newTeamsRef = teamRef.push();
   newTeamsRef.set({
-    Teams: (req && req.body.leagueTeamInfoList) || ''
+    Teams: req.body.leagueTeamInfoList
   });
   res.send('Got a POST request');
 });
@@ -64,7 +64,7 @@ app.post('/xbox/4720274/standings', function(req, res) {
   // Rosters are in the body under rosterInfoList
   const newStandRef = standRef.push();
   newStandRef.set({
-    Standings: (req && req.body) || ''
+    Standings: (req && req.body.teamStandingInfoList) || ''
   });
   res.send('Got a POST request');
 });
@@ -78,7 +78,7 @@ app.post('/xbox/4720274/team/*', function(req, res) {
   // Rosters are in the body under rosterInfoList
   const newRostRef = rostRef.push();
   newRostRef.set({
-    Rosters: (req && req.body) || ''
+    Rosters: (req && req.body.rosterInfoList) || ''
   });
   res.send('Got a POST request');
 });
@@ -91,7 +91,7 @@ app.post('/xbox/4720274/freeagents/roster', function(req, res) {
   // Rosters are in the body under rosterInfoList
   const newFreeRef = freeRef.push();
   newFreeRef.set({
-    FreeAgents: (req && req.body) || ''
+    FreeAgents: (req && req.body.rosterInfoList) || ''
   });
   res.send('Got a POST request');
 });
@@ -104,7 +104,7 @@ app.post('/xbox/4720274/week/pre/*/schedules', function(req, res) {
   // Rosters are in the body under rosterInfoList
   const newPreRef = preRef.push();
   newPreRef.set({
-    Preseason: (req && req.body) || ''
+    Preseason: (req && req.body.gameScheduleInfoList) || ''
   });
   res.send('Got a POST request');
 }); 
@@ -117,7 +117,7 @@ app.post('/xbox/4720274/week/pre/*/defense', function(req, res) {
   // Rosters are in the body under rosterInfoList
   const newDefRef = defRef.push();
   newDefRef.set({
-    PreDefense: (req && req.body) || ''
+    PreDefense: (req && req.body.playerDefensiveStatInfoList) || ''
   });
   res.send('Got a POST request');
 });
@@ -130,7 +130,7 @@ app.post('/xbox/4720274/week/pre/*/kicking', function(req, res) {
   // Rosters are in the body under rosterInfoList
   const newKickRef = kickRef.push();
   newKickRef.set({
-    PreKicking: (req && req.body) || ''
+    PreKicking: (req && req.body.playerKickingStatInfoList) || ''
   });
   res.send('Got a POST request');
 }); 
@@ -143,7 +143,7 @@ app.post('/xbox/4720274/week/pre/*/passing', function(req, res) {
   // Rosters are in the body under rosterInfoList
   const newPassRef = passRef.push();
   newPassRef.set({
-    PrePassing: (req && req.body) || ''
+    PrePassing: (req && req.body.playerPassingStatInfoList) || ''
   });
   res.send('Got a POST request');
 });
@@ -156,7 +156,7 @@ app.post('/xbox/4720274/week/pre/*/punting', function(req, res) {
   // Rosters are in the body under rosterInfoList
   const newPuntRef = puntRef.push();
   newPuntRef.set({
-    PrePunting: (req && req.body) || ''
+    PrePunting: (req && req.body.playerPuntingStatInfoList) || ''
   });
   res.send('Got a POST request');
 });
@@ -169,7 +169,7 @@ app.post('/xbox/4720274/week/pre/*/receiving', function(req, res) {
   // Rosters are in the body under rosterInfoList
   const newRecRef = recRef.push();
   newRecRef.set({
-    PreReceiving: (req && req.body) || ''
+    PreReceiving: (req && req.body.playerReceivingStatInfoList) || ''
   });
   res.send('Got a POST request');
 });
@@ -182,7 +182,7 @@ app.post('/xbox/4720274/week/pre/*/rushing', function(req, res) {
   // Rosters are in the body under rosterInfoList
   const newRushRef = rushRef.push();
   newRushRef.set({
-    PreRushing: (req && req.body) || ''
+    PreRushing: (req && req.body.playerRushingStatInfoList) || ''
   });
   res.send('Got a POST request');
 });
@@ -195,7 +195,7 @@ app.post('/xbox/4720274/week/pre/*/teamstats', function(req, res) {
   // Rosters are in the body under rosterInfoList
   const newTstatsRef = tstatsRef.push();
   newTstatsRef.set({
-    PreTeamStats: (req && req.body) || ''
+    PreTeamStats: (req && req.body.teamStatInfoList) || ''
   });
   res.send('Got a POST request');
 });
@@ -208,7 +208,7 @@ app.post('/xbox/4720274/week/reg/*/schedules', function(req, res) {
   // Rosters are in the body under rosterInfoList
   const newRegRef = regRef.push();
   newRegRef.set({
-    RegularSeason: (req && req.body) || ''
+    RegularSeason: (req && req.body.gameScheduleInfoList) || ''
   });
   res.send('Got a POST request');
 });
