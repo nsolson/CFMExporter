@@ -50,7 +50,7 @@ app.post('/xbox/4720274/leagueteams', function(req, res) {
   // Rosters are in the body under rosterInfoList
   const newTeamsRef = teamRef.push();
   newTeamsRef.set({
-    Teams: (req && req.body) || ''
+    Teams: (req && req.body.leagueTeamInfoList) || ''
   });
   res.send('Got a POST request');
 });
