@@ -213,6 +213,97 @@ app.post('/xbox/4720274/week/reg/*/schedules', function(req, res) {
   res.send('Got a POST request');
 });
 
+app.post('/xbox/4720274/week/reg/*/defense', function(req, res) {
+  const db = admin.database();
+  const ref = db.ref();
+  const defRef = ref.child("RegDefense");
+  // Change what is set to the database here
+  // Rosters are in the body under rosterInfoList
+  const newDefRef = defRef.push();
+  newDefRef.set({
+    RegDefense: (req && req.body.playerDefensiveStatInfoList) || ''
+  });
+  res.send('Got a POST request');
+});
+
+app.post('/xbox/4720274/week/Reg/*/kicking', function(req, res) {
+  const db = admin.database();
+  const ref = db.ref();
+  const kickRef = ref.child("RegKicking");
+  // Change what is set to the database here
+  // Rosters are in the body under rosterInfoList
+  const newKickRef = kickRef.push();
+  newKickRef.set({
+    RegKicking: (req && req.body.playerKickingStatInfoList) || ''
+  });
+  res.send('Got a POST request');
+}); 
+
+app.post('/xbox/4720274/week/Reg/*/passing', function(req, res) {
+  const db = admin.database();
+  const ref = db.ref();
+  const passRef = ref.child("RegPassing");
+  // Change what is set to the database here
+  // Rosters are in the body under rosterInfoList
+  const newPassRef = passRef.push();
+  newPassRef.set({
+    RegPassing: (req && req.body.playerPassingStatInfoList) || ''
+  });
+  res.send('Got a POST request');
+});
+
+app.post('/xbox/4720274/week/Reg/*/punting', function(req, res) {
+  const db = admin.database();
+  const ref = db.ref();
+  const puntRef = ref.child("RegPunting");
+  // Change what is set to the database here
+  // Rosters are in the body under rosterInfoList
+  const newPuntRef = puntRef.push();
+  newPuntRef.set({
+    RegPunting: (req && req.body.playerPuntingStatInfoList) || ''
+  });
+  res.send('Got a POST request');
+});
+
+app.post('/xbox/4720274/week/Reg/*/receiving', function(req, res) {
+  const db = admin.database();
+  const ref = db.ref();
+  const recRef = ref.child("RegReceiving");
+  // Change what is set to the database here
+  // Rosters are in the body under rosterInfoList
+  const newRecRef = recRef.push();
+  newRecRef.set({
+    RegReceiving: (req && req.body.playerReceivingStatInfoList) || ''
+  });
+  res.send('Got a POST request');
+});
+
+app.post('/xbox/4720274/week/Reg/*/rushing', function(req, res) {
+  const db = admin.database();
+  const ref = db.ref();
+  const rushRef = ref.child("RegRushing");
+  // Change what is set to the database here
+  // Rosters are in the body under rosterInfoList
+  const newRushRef = rushRef.push();
+  newRushRef.set({
+    RegRushing: (req && req.body.playerRushingStatInfoList) || ''
+  });
+  res.send('Got a POST request');
+});
+
+app.post('/xbox/4720274/week/Reg/*/teamstats', function(req, res) {
+  const db = admin.database();
+  const ref = db.ref();
+  const tstatsRef = ref.child("RegTeamStats");
+  // Change what is set to the database here
+  // Rosters are in the body under rosterInfoList
+  const newTstatsRef = tstatsRef.push();
+  newTstatsRef.set({
+    RegTeamStats: (req && req.body.teamStatInfoList) || ''
+  });
+  res.send('Got a POST request');
+});
+
 // This accepts all posts requests!
 //app.post('/*', function(req, res) {
 //  const db = admin.database();
