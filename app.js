@@ -38,6 +38,13 @@ app.get('/', function(req, res) {
   ref.child("PreRushing").remove();
   ref.child("PreTeamStats").remove();
   ref.child("RegularSeason").remove();
+  ref.child("RegDefense").remove();
+  ref.child("RegKicking").remove();
+  ref.child("RegPassing").remove();
+  ref.child("RegPunting").remove();
+  ref.child("RegReceiving").remove();
+  ref.child("RegRushing").remove();
+  ref.child("RegTeamStats").remove();
   return res.send('Testing');
 });
 
