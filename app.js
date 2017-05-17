@@ -24,305 +24,107 @@ app.use(bodyParser.urlencoded({limit: '50mb', extended: true}));
 app.get('/', function(req, res) {
   const db = admin.database();
   const ref = db.ref();
-  ref.child("data").remove();
-  ref.child("Teams").remove();
-  ref.child("Standings").remove();
-  ref.child("Rosters").remove();
-  ref.child("FreeAgents").remove();
-  ref.child("Preseason").remove();
-  ref.child("PreDefense").remove();
-  ref.child("PreKicking").remove();
-  ref.child("PrePassing").remove();
-  ref.child("PrePunting").remove();
-  ref.child("PreReceiving").remove();
-  ref.child("PreRushing").remove();
-  ref.child("PreTeamStats").remove();
-  ref.child("RegularSeason").remove();
-  ref.child("RegDefense").remove();
-  ref.child("RegKicking").remove();
-  ref.child("RegPassing").remove();
-  ref.child("RegPunting").remove();
-  ref.child("RegReceiving").remove();
-  ref.child("RegRushing").remove();
-  ref.child("RegTeamStats").remove();
-  return res.send('Testing');
+  ref.remove();
+  return res.send('Database cleared');
 });
 
-//Teams Post
-app.post('/xbox/4720274/leagueteams', function(req, res) {
+app.post('/:platform/:leagueId/leagueteams', (req, res) => {
   const db = admin.database();
   const ref = db.ref();
-  const teamRef = ref.child("Teams");
-  // Change what is set to the database here
-  // Rosters are in the body under rosterInfoList
-  const newTeamsRef = teamRef.push();
-  newTeamsRef.set({
-    Teams: req.body.leagueTeamInfoList
+  const {platform, leagueId} = req.params;
+  const dataRef = ref.child(`data/${platform}/${leagueId}/leagueteams`);
+  const {body: {leagueTeamInfoList}} = req;
+
+  dataRef.set({
+    leagueTeamInfoList
   });
-  res.send('Got a POST request');
+  res.sendStatus(200);
 });
 
-//Standings Post
-app.post('/xbox/4720274/standings', function(req, res) {
+app.post('/:platform/:leagueId/standings', (req, res) => {
   const db = admin.database();
   const ref = db.ref();
-  const standRef = ref.child("Standings");
-  // Change what is set to the database here
-  // Rosters are in the body under rosterInfoList
-  const newStandRef = standRef.push();
-  newStandRef.set({
-    Standings: (req && req.body.teamStandingInfoList) || ''
+  const {platform, leagueId} = req.params;
+  const dataRef = ref.child(`data/${platform}/${leagueId}/standings`);
+  const {body: {teamStandingInfoList}} = req;
+
+  dataRef.set({
+    teamStandingInfoList
   });
-  res.send('Got a POST request');
+  res.sendStatus(200);
 });
 
-//Rosters Post
-app.post('/xbox/4720274/team/*', function(req, res) {
+
+app.post('/:platform/:leagueId/week/:weekType/:weekNumber/:dataType', (req, res) => {
   const db = admin.database();
   const ref = db.ref();
-  const rostRef = ref.child("Rosters");
-  // Change what is set to the database here
-  // Rosters are in the body under rosterInfoList
-  const newRostRef = rostRef.push();
-  newRostRef.set({
-    Rosters: (req && req.body.rosterInfoList) || ''
-  });
-  res.send('Got a POST request');
+  const {platform, leagueId, weekType, weekNumber, dataType} = req.params;
+  const dataRef = ref.child(`data/${platform}/${leagueId}/week/${weekType}/${weekNumber}/${dataType}`);
+
+  // method=POST path="/platform/leagueId/week/reg/1/defense"
+  // method=POST path="/platform/leagueId/week/reg/1/kicking"
+  // method=POST path="/platform/leagueId/week/reg/1/passing"
+  // method=POST path="/platform/leagueId/week/reg/1/punting"
+  // method=POST path="/platform/leagueId/week/reg/1/receiving"
+  // method=POST path="/platform/leagueId/week/reg/1/rushing"
+
+  switch(dataType) {
+    case 'schedules':
+      const {body: {gameScheduleInfoList}} = req;
+      dataRef.set({
+        gameScheduleInfoList
+      });
+      break;
+    case 'teamstats':
+      const {body: {teamStatInfoList}} = req;
+      dataRef.set({
+        teamStatInfoList
+      });
+      break;
+    case 'defense':
+      const {body: {playerDefensiveStatInfoList}} = req;
+      dataRef.set({
+        playerDefensiveStatInfoList
+      });
+      break;
+    default:
+      const {body} = req;
+      const property = `player${capitalizeFirstLetter(dataType)}StatInfoList`;
+      dataRef.set({
+        [property]: body[property] || ''
+      });
+      break;
+  }
+
+  res.sendStatus(200);
 });
 
-app.post('/xbox/4720274/freeagents/roster', function(req, res) {
+
+// ROSTERS
+
+app.post('/:platform/:leagueId/freeagents/roster', (req, res) => {
   const db = admin.database();
   const ref = db.ref();
-  const freeRef = ref.child("FreeAgents");
-  // Change what is set to the database here
-  // Rosters are in the body under rosterInfoList
-  const newFreeRef = freeRef.push();
-  newFreeRef.set({
-    FreeAgents: (req && req.body.rosterInfoList) || ''
+  const {platform, leagueId} = req.params;
+  const dataRef = ref.child(`data/${platform}/${leagueId}/freeagents`);
+  const {body: {rosterInfoList}} = req;
+  dataRef.set({
+    rosterInfoList
   });
-  res.send('Got a POST request');
+  res.sendStatus(200);
 });
 
-app.post('/xbox/4720274/week/pre/*/schedules', function(req, res) {
+app.post('/:platform/:leagueId/team/:teamId/roster', (req, res) => {
   const db = admin.database();
   const ref = db.ref();
-  const preRef = ref.child("Preseason");
-  // Change what is set to the database here
-  // Rosters are in the body under rosterInfoList
-  const newPreRef = preRef.push();
-  newPreRef.set({
-    Preseason: (req && req.body.gameScheduleInfoList) || ''
+  const {platform, leagueId, teamId} = req.params;
+  const dataRef = ref.child(`data/${platform}/${leagueId}/team/${teamId}`);
+  const {body: {rosterInfoList}} = req;
+  dataRef.set({
+    rosterInfoList
   });
-  res.send('Got a POST request');
-}); 
-
-app.post('/xbox/4720274/week/pre/*/defense', function(req, res) {
-  const db = admin.database();
-  const ref = db.ref();
-  const defRef = ref.child("PreDefense");
-  // Change what is set to the database here
-  // Rosters are in the body under rosterInfoList
-  const newDefRef = defRef.push();
-  newDefRef.set({
-    PreDefense: (req && req.body.playerDefensiveStatInfoList) || ''
-  });
-  res.send('Got a POST request');
+  res.sendStatus(200);
 });
 
-app.post('/xbox/4720274/week/pre/*/kicking', function(req, res) {
-  const db = admin.database();
-  const ref = db.ref();
-  const kickRef = ref.child("PreKicking");
-  // Change what is set to the database here
-  // Rosters are in the body under rosterInfoList
-  const newKickRef = kickRef.push();
-  newKickRef.set({
-    PreKicking: (req && req.body.playerKickingStatInfoList) || ''
-  });
-  res.send('Got a POST request');
-}); 
-
-app.post('/xbox/4720274/week/pre/*/passing', function(req, res) {
-  const db = admin.database();
-  const ref = db.ref();
-  const passRef = ref.child("PrePassing");
-  // Change what is set to the database here
-  // Rosters are in the body under rosterInfoList
-  const newPassRef = passRef.push();
-  newPassRef.set({
-    PrePassing: (req && req.body.playerPassingStatInfoList) || ''
-  });
-  res.send('Got a POST request');
-});
-
-app.post('/xbox/4720274/week/pre/*/punting', function(req, res) {
-  const db = admin.database();
-  const ref = db.ref();
-  const puntRef = ref.child("PrePunting");
-  // Change what is set to the database here
-  // Rosters are in the body under rosterInfoList
-  const newPuntRef = puntRef.push();
-  newPuntRef.set({
-    PrePunting: (req && req.body.playerPuntingStatInfoList) || ''
-  });
-  res.send('Got a POST request');
-});
-
-app.post('/xbox/4720274/week/pre/*/receiving', function(req, res) {
-  const db = admin.database();
-  const ref = db.ref();
-  const recRef = ref.child("PreReceiving");
-  // Change what is set to the database here
-  // Rosters are in the body under rosterInfoList
-  const newRecRef = recRef.push();
-  newRecRef.set({
-    PreReceiving: (req && req.body.playerReceivingStatInfoList) || ''
-  });
-  res.send('Got a POST request');
-});
-
-app.post('/xbox/4720274/week/pre/*/rushing', function(req, res) {
-  const db = admin.database();
-  const ref = db.ref();
-  const rushRef = ref.child("PreRushing");
-  // Change what is set to the database here
-  // Rosters are in the body under rosterInfoList
-  const newRushRef = rushRef.push();
-  newRushRef.set({
-    PreRushing: (req && req.body.playerRushingStatInfoList) || ''
-  });
-  res.send('Got a POST request');
-});
-
-app.post('/xbox/4720274/week/pre/*/teamstats', function(req, res) {
-  const db = admin.database();
-  const ref = db.ref();
-  const tstatsRef = ref.child("PreTeamStats");
-  // Change what is set to the database here
-  // Rosters are in the body under rosterInfoList
-  const newTstatsRef = tstatsRef.push();
-  newTstatsRef.set({
-    PreTeamStats: (req && req.body.teamStatInfoList) || ''
-  });
-  res.send('Got a POST request');
-});
-
-app.post('/xbox/4720274/week/reg/*/schedules', function(req, res) {
-  const db = admin.database();
-  const ref = db.ref();
-  const regRef = ref.child("RegularSeason");
-  // Change what is set to the database here
-  // Rosters are in the body under rosterInfoList
-  const newRegRef = regRef.push();
-  newRegRef.set({
-    RegularSeason: (req && req.body.gameScheduleInfoList) || ''
-  });
-  res.send('Got a POST request');
-});
-
-app.post('/xbox/4720274/week/reg/*/defense', function(req, res) {
-  const db = admin.database();
-  const ref = db.ref();
-  const defRef = ref.child("RegDefense");
-  // Change what is set to the database here
-  // Rosters are in the body under rosterInfoList
-  const newDefRef = defRef.push();
-  newDefRef.set({
-    RegDefense: (req && req.body.playerDefensiveStatInfoList) || ''
-  });
-  res.send('Got a POST request');
-});
-
-app.post('/xbox/4720274/week/Reg/*/kicking', function(req, res) {
-  const db = admin.database();
-  const ref = db.ref();
-  const kickRef = ref.child("RegKicking");
-  // Change what is set to the database here
-  // Rosters are in the body under rosterInfoList
-  const newKickRef = kickRef.push();
-  newKickRef.set({
-    RegKicking: (req && req.body.playerKickingStatInfoList) || ''
-  });
-  res.send('Got a POST request');
-}); 
-
-app.post('/xbox/4720274/week/Reg/*/passing', function(req, res) {
-  const db = admin.database();
-  const ref = db.ref();
-  const passRef = ref.child("RegPassing");
-  // Change what is set to the database here
-  // Rosters are in the body under rosterInfoList
-  const newPassRef = passRef.push();
-  newPassRef.set({
-    RegPassing: (req && req.body.playerPassingStatInfoList) || ''
-  });
-  res.send('Got a POST request');
-});
-
-app.post('/xbox/4720274/week/Reg/*/punting', function(req, res) {
-  const db = admin.database();
-  const ref = db.ref();
-  const puntRef = ref.child("RegPunting");
-  // Change what is set to the database here
-  // Rosters are in the body under rosterInfoList
-  const newPuntRef = puntRef.push();
-  newPuntRef.set({
-    RegPunting: (req && req.body.playerPuntingStatInfoList) || ''
-  });
-  res.send('Got a POST request');
-});
-
-app.post('/xbox/4720274/week/Reg/*/receiving', function(req, res) {
-  const db = admin.database();
-  const ref = db.ref();
-  const recRef = ref.child("RegReceiving");
-  // Change what is set to the database here
-  // Rosters are in the body under rosterInfoList
-  const newRecRef = recRef.push();
-  newRecRef.set({
-    RegReceiving: (req && req.body.playerReceivingStatInfoList) || ''
-  });
-  res.send('Got a POST request');
-});
-
-app.post('/xbox/4720274/week/Reg/*/rushing', function(req, res) {
-  const db = admin.database();
-  const ref = db.ref();
-  const rushRef = ref.child("RegRushing");
-  // Change what is set to the database here
-  // Rosters are in the body under rosterInfoList
-  const newRushRef = rushRef.push();
-  newRushRef.set({
-    RegRushing: (req && req.body.playerRushingStatInfoList) || ''
-  });
-  res.send('Got a POST request');
-});
-
-app.post('/xbox/4720274/week/Reg/*/teamstats', function(req, res) {
-  const db = admin.database();
-  const ref = db.ref();
-  const tstatsRef = ref.child("RegTeamStats");
-  // Change what is set to the database here
-  // Rosters are in the body under rosterInfoList
-  const newTstatsRef = tstatsRef.push();
-  newTstatsRef.set({
-    RegTeamStats: (req && req.body.teamStatInfoList) || ''
-  });
-  res.send('Got a POST request');
-});
-
-// This accepts all posts requests!
-//app.post('/*', function(req, res) {
-//  const db = admin.database();
-//  const ref = db.ref();
-//  const dataRef = ref.child("data");
-  // Change what is set to the database here
-  // Rosters are in the body under rosterInfoList
-//  const newDataRef = dataRef.push();
-//  newDataRef.set({
-//    data: (req && req.body) || ''
-//  });
-//  res.send('Got a POST request');
-//});
 
 app.listen(app.get('port'), function() { console.log('Madden Companion Exporter is running on port', app.get('port')) });
