@@ -2,6 +2,10 @@ var express = require('express');
 var bodyParser = require('body-parser');
 var admin = require("firebase-admin");
 
+function capitalizeFirstLetter(str) {
+  return str.charAt(0).toUpperCase() + str.slice(1);
+}
+
 const app = express();
 
 // TODO: Enter the path to your service account json file
