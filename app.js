@@ -33,7 +33,7 @@ app.get('/', function(req, res) {
 });
 
 app.post('*', (req, res) => {
-  console.log(req.url);
+  console.log('Request URL: ' + req.url);
   res.sendStatus(200);
 });
 
