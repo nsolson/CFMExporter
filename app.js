@@ -32,6 +32,11 @@ app.get('/', function(req, res) {
   return res.send('Database cleared');
 });
 
+app.post('*', (req, res) => {
+  console.log(req.url);
+  res.sendStatus(200);
+});
+
 app.post('/:platform/:leagueId/leagueteams', (req, res) => {
   const db = admin.database();
   const ref = db.ref();
