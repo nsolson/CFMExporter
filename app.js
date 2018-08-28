@@ -25,7 +25,7 @@ app.use(express.static(__dirname + '/dist'));
 app.use(bodyParser.json({limit: '50mb'}));
 app.use(bodyParser.urlencoded({limit: '50mb', extended: true}));
 
-app.get('/', function(req, res) {
+app.get('/delete', function(req, res) {
   const db = admin.database();
   const ref = db.ref();
   ref.remove();
