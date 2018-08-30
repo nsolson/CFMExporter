@@ -32,11 +32,6 @@ app.get('/delete', function(req, res) {
   return res.send('Database cleared');
 });
 
-app.post('*', (req, res) => {
-  console.log('Request URL: ' + req.url);
-  res.sendStatus(200);
-});
-
 app.post('/:platform/:leagueId/leagueteams', (req, res) => {
   const db = admin.database();
   const ref = db.ref();
