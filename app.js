@@ -1,6 +1,6 @@
 var express = require('express');
 var bodyParser = require('body-parser');
-const admin = require("firebase-admin");
+var admin = require("firebase-admin");
 
 function capitalizeFirstLetter(str) {
 	return str.charAt(0).toUpperCase() + str.slice(1);
