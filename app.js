@@ -1,7 +1,6 @@
 var express = require('express');
 var bodyParser = require('body-parser');
-//var admin = require("firebase-admin");
-var firebase = require("firebase/app");
+const admin = require("firebase-admin");
 
 function capitalizeFirstLetter(str) {
 	return str.charAt(0).toUpperCase() + str.slice(1);
@@ -13,28 +12,22 @@ const app = express();
 // To do this, go to the 'Settings' tab of your Heroku app or see here for more details https://devcenter.heroku.com/articles/config-vars
 
 // TODO: Enter your database url from firebase
-/*
 admin.initializeApp({
 	credential: admin.credential.cert({
-		"projectId" : process.env.FIREBASE_PROJECT_ID,
-		"private_key": process.env.FIREBASE_PRIVATE_KEY.replace(/\\n/g,'\n'),
-		"clientEmail": process.env.FIREBASE_CLIENT_EMAIL,
+		"type": "service_account",
+		"project_id": process.env.FIREBASE_PROJECT_ID,
+		"private_key_id": process.env.FIREBASE_PRIVATE_KEY_ID,
+		"private_key": process.env.FIREBASE_PRIVATE_KEY.replace(/\\n/g, '\n'),
+		"client_email": process.env.FIREBASE_CLIENT_EMAIL,
+		"client_id": process.env.FIREBASE_CLIENT_ID,
+		"auth_uri": "https://accounts.google.com/o/oauth2/auth",
+		"token_uri": "https://oauth2.googleapis.com/token",
+		"auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+		"client_x509_cert_url": process.env.FIREBASE_CERT_URL
 	}),
-	databaseURL: "https://madden-cfm-f7700.firebaseio.com"
+	databaseURL: "https://" + process.env.FIREBASE_PROJECT_ID + ".firebaseio.com"
 });
-*/
 
-var firebaseConfig = {
- 	apiKey: process.env.FIREBASE_API_KEY,
- 	authDomain: process.env.FIREBASE_PROJECT_ID + ".firebaseapp.com ",
- 	databaseURL: "https://madden-cfm-f7700.firebaseio.com",
- 	projectId: process.env.FIREBASE_PROJECT_ID,
- 	storageBucket: process.env.FIREBASE_PROJECT_ID + ".appspot.com ",
- 	messagingSenderId: process.env.FIREBASE_MSG_SENDER_ID,
- 	appId: process.env.FIREBASE_APP_ID
- };
-
-firebase.initializeApp(firebaseConfig);
 
 // Setup
 // Change the default port here if you want for local dev.
