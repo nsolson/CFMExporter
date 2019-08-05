@@ -1,6 +1,7 @@
 var express = require('express');
 var bodyParser = require('body-parser');
-var admin = require("firebase-admin");
+//var admin = require("firebase-admin");
+var firebase = require("firebase/app");
 
 function capitalizeFirstLetter(str) {
 	return str.charAt(0).toUpperCase() + str.slice(1);
@@ -12,6 +13,7 @@ const app = express();
 // To do this, go to the 'Settings' tab of your Heroku app or see here for more details https://devcenter.heroku.com/articles/config-vars
 
 // TODO: Enter your database url from firebase
+/*
 admin.initializeApp({
 	credential: admin.credential.cert({
 		"projectId" : process.env.FIREBASE_PROJECT_ID,
@@ -20,6 +22,19 @@ admin.initializeApp({
 	}),
 	databaseURL: "https://madden-cfm-f7700.firebaseio.com"
 });
+*/
+
+var firebaseConfig = {
+ 	apiKey: process.env.FIREBASE_API_KEY,
+ 	authDomain: process.env.FIREBASE_PROJECT_ID + ".firebaseapp.com ",
+ 	databaseURL: "https://madden-cfm-f7700.firebaseio.com",
+ 	projectId: process.env.FIREBASE_PROJECT_ID,
+ 	storageBucket: process.env.FIREBASE_PROJECT_ID + ".appspot.com ",
+ 	messagingSenderId: process.env.FIREBASE_MSG_SENDER_ID,
+ 	appId: process.env.FIREBASE_APP_ID
+ };
+
+firebase.initializeApp(firebaseConfig);
 
 // Setup
 // Change the default port here if you want for local dev.
